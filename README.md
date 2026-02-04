@@ -20,4 +20,4 @@ You will need to install the following tools to run the pipeline (I recomend usi
 * ngsDist v1.0.1
 * cdhit v4.8.1
 
-You will also need some standard tools like gzip to work with all the files
+You will also need some standard tools like gzip to work with all the files. It's important to use the versions specified in this list, as some features used in this pipeline might not be available in newer builds.
