@@ -15,4 +15,4 @@ phyluce_assembly_explode_get_fastas_file \
 --input all-taxa-incomplete.fasta \
     --output exploded-fastas \
 
-You will end up with UCE references that you can use for SNP calling
+You will end up with UCE references that you can use for SNP calling in step 03_intraspecific_diversity
