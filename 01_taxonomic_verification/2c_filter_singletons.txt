@@ -1,0 +1,23 @@
+#!/bin/bash
+#SBATCH --job-name=single_filter     # Job name
+#SBATCH --partition=cpuq   # Specify the partition you want to use
+#SBATCH --cpus-per-task=2                 # Number of CPU cores per task
+#SBATCH --time=48:00:00                   # Time limit hrs:min:sec
+#SBATCH --mem=10G                          # Memory per node
+#SBATCH --output=/export/home/a-e/amateos/phyluce_test_2/results/uce_search_genomes/extractUCE_%j.out  # Standard output log
+#SBATCH --error=/export/home/a-e/amateos/phyluce_test_2/logs/extractUCE_%j.err 
+
+###THIS SCRIPT filters out singletons from loci fastas from UCE extraction
+
+# Activate the conda environment where Phyluce is installed
+source /export/home/a-e/amateos/miniconda3/etc/profile.d/conda.sh
+conda activate phyluce-1.7.3
+
+
+# this is done from within the directory where your loci fastas are
+
+mkdir -p /export/home/a-e/amateos/phyluce_test_2/phylo_tests/new_tree_w_topotypes/exploded-fastas/singletons
+
+# this just grabs the fiels where there is only 1 “>” – so only one fasta seq in the file and move them to the new folder “singletons”
+
+grep -c ">" *.fasta | awk -F ':' '$2==1{print $1}' | xargs -I {} mv {} /export/home/a-e/amateos/phyluce_test_2/phylo_tests/new_tree_w_topotypes/exploded-fastas/singletons
