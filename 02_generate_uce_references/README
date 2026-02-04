@@ -1,1 +1,18 @@
+These scripts can be used along with the phyluce harvest from genomes tutorial (Faircloth et al. 2017; https://phyluce.readthedocs.io/en/latest/tutorials/tutorial-3.html)
 
+How to use:
+
+1.	Convert fasta genomes to .2bit
+gunzip x.fasta.gz
+faToTwoBit -ignoreDups x.fasta x.2bit
+twoBitInfo x.2bit sizes.tab
+2.	Create folder named after genome with .tab and .2bit files
+3.	01_uce_search.slurm 
+4.	Update genomes.conf with sample names and path of each file
+5.	Run 02_uce_extraction.slurm with x amount of flanking regions}
+6.	Explode by loci
+phyluce_assembly_explode_get_fastas_file \
+--input all-taxa-incomplete.fasta \
+    --output exploded-fastas \
+
+You will end up with UCE references that you can use for SNP calling
