@@ -1,0 +1,46 @@
+#!/bin/bash
+#SBATCH --job-name= #Job name
+#SBATCH --partition= #Specify the partition you want to use (cpuq, memq, etc)
+#SBATCH --cpus-per-task= #Number of CPU cores per task
+#SBATCH --time= #Time limit hrs:min:sec
+#SBATCH --mem= #Memory per node
+#SBATCH --output= #Standard output log
+
+
+###This script harvests UCE loci from genomes, before running, convert fastas to .2bit 
+
+echo
+echo "UCE extraction"
+
+
+
+phyluce_probe_slice_sequence_from_genomes \
+    --lastz \
+    --conf /your/path/genomes.conf \
+    --flank \ #size of flanking region
+    --name-pattern \
+    --output
+
+date 
+echo "UCE extraction done"
+echo
+
+echo "exploding large fasta file by locus"
+
+phyluce_assembly_explode_get_fastas_file \
+    --input all-taxa-incomplete.fasta \
+    --output exploded-fastas 
+echo
+echo "get summary stats on the FASTAS"
+
+for i in exploded-fastas/*.fasta;
+do
+    phyluce_assembly_get_fasta_lengths --input $i --csv;
+done
+
+
+echo "UCE extraction complete"
+
+
+
+
