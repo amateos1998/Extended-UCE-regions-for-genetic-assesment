@@ -1,8 +1,13 @@
 # Extended-UCE-regions-for-genetic-assesment
+### Files required to run the pipline
+You will need genomic paired end reads in fasta format (fq.gz is fine), a UCE baitset designed for your study taxa (in this case we used the hexa-v2 baitset develop by [Cowman et al. 2020](https://www.sciencedirect.com/science/article/pii/S1055790320302165/)), and alignments from an existing phylogenetic tree to place your samples into.
 
-### Requirements to run the pipeline
+Note: lcWGS short reads are best in this pipeline, depth and coverage of 4-5x is recommended for optimal results.
+
+### Software requirements to run the pipeline
 The whole pipeline is based in Linux using bash and R.
-You will need to have access to a HPC workload manager (in this case I used SLURM, but you can use qsub or any other manager)
+You will need to have access to a HPC workload manager (in this case I used SLURM, but you can use qsub or any other manager).
+
 You will need to install the following tools to run the pipeline (I recomend using conda to manage all your tools, all my scripts use conda to activate different environments):
 * Phyluce v1.7.3 (the phyluce environment already comes with some of the these binaries)
 * fastp v0.23.2
