@@ -22,9 +22,11 @@ You will need to install the following tools to run the pipeline (I recomend usi
 * FLASH v1.2.11
 * bowtie2 v2.5.4
 * faToTwoBit
-* GATK v3.8
+* GATK v3.8b
 * ANGSD v0.928
 * ngsDist v1.0.1
 * cdhit v4.8.1
 
 You will also need some standard tools like gzip to work with all the files. It's important to use the versions specified in this list, as some features used in this pipeline might not be available in newer builds.
+
+Step 03_intraspecific_diversity is bases on X
