@@ -4,6 +4,8 @@ You will need genomic paired end reads in fasta format (fq.gz is fine), a UCE ba
 
 You will also need reference genomes to generate the extended UCE references. You can generate a UCE reference using a de-novo assembly of one of your lcWGS short reads, however this will limit the maximum size of the UCE flanking region to the length of your contigs (we recommend using published genomes if possible).
 
+It's also a good idea to have a master metadata file (.list or .txt) with all the samples and to have metadata files for each group of study (by population, species, haplotype, etc.)
+
 Note: lcWGS ilumina paired-end short reads are best in this pipeline, depth and coverage of 4-5x is recommended for optimal results.
 
 ### Software requirements to run the pipeline
