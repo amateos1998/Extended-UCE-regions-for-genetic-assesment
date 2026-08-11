@@ -1,6 +1,6 @@
 # Extended-UCE-regions-for-genetic-assesment
 ### Input files required to run the pipline
-You will need genomic paired end reads in fasta format (fq.gz is fine), a UCE baitset designed for your study taxa (in this case we used the hexa-v2 baitset develop by [Cowman et al. 2020](https://www.sciencedirect.com/science/article/pii/S1055790320302165/)), and alignments from an existing phylogenetic tree to place your samples into (fasta or nexus). 
+You will need genomic paired end reads in fasta format (fq.gz), a UCE baitset designed for your study taxa (in this case we used the hexa-v2 baitset develop by [Cowman et al. 2020](https://www.sciencedirect.com/science/article/pii/S1055790320302165/)), and alignments from an existing phylogenetic tree to place your samples into (fasta or nexus). 
 
 You will also need reference genomes to generate the extended UCE references. You can generate a UCE reference using a de-novo assembly of one of your lcWGS short reads, however this will limit the maximum size of the UCE flanking region to the length of your contigs (we recommend using published genomes if possible).
 
