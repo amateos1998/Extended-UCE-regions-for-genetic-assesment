@@ -9,9 +9,7 @@
 
 #This script performs FastQC
 
-#when running manually with bash, set default values for slurm variables
-###slrm_JOB_ID=${SLURM_JOB_ID:-fastqc_test}
-####slrm_CPUS_PER_TASK=${SLURM_CPUS_PER_TASK:-4}
+
 
 #log slurm info
 echo "# Job ID: $SLURM_JOB_ID started"
@@ -36,7 +34,7 @@ echo "$infile3"
 echo
 
 # Ensure /scratch is not full
-dir="/export/home/a-e/amateos/phyluce_test_2/mapping_tests/scratch"   
+dir="/your/path/scratch"   
 reqSpace=10     # in GByte
 availSpace=$(df -BG "${dir}" | awk 'NR==2 { print $4+0 }')
 if (( availSpace < reqSpace )); then
@@ -45,9 +43,9 @@ if (( availSpace < reqSpace )); then
 fi
 
 # Copy only the input files to scratch
-echo "########## Copying files to /export/home/a-e/amateos/phyluce_test_2/mapping_tests/scratch"
-mkdir -p /export/home/a-e/amateos/phyluce_test_2/mapping_tests/scratch/tmp.$SLURM_JOB_ID
-cd /export/home/a-e/amateos/phyluce_test_2/mapping_tests/scratch/tmp.$SLURM_JOB_ID
+echo "########## Copying files to /your/path/scratch"
+mkdir -p /your/path/scratch/tmp.$SLURM_JOB_ID
+cd /your/path/mapping_tests/scratch/tmp.$SLURM_JOB_ID
 
 cp "$infile1" .
 cp "$infile2" .
@@ -72,7 +70,7 @@ echo "FastQC completed successfully."
 #mv *fastqc.zip *fastqc.html $outdir
 
 # Clean up scratch directory
-rm -r /export/home/a-e/amateos/phyluce_test_2/mapping_tests/scratch/tmp.$SLURM_JOB_ID/*
+rm -r /your/path/scratch/tmp.$SLURM_JOB_ID/*
 
 echo "Job ID: $SLURM_JOB_ID finished."
 date
