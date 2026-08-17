@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export R_LIBS="/export/home/a-e/amateos/phyluce_test_2/tools/Rlibs"
+export R_LIBS="/your/path/Rlibs"
 
 #This script converts .dist files from ngsDist into MDS matrix files, using the ngsTools script "getMDS.R". 
 
