@@ -20,8 +20,11 @@ bamdir=$3     #results/10b-11_indel_angsd_depth/180810 etc.
 outdir=$4     #results/12_ngs_dist etc.
 snp_pval=$5   #1e-3 etc.
 prior=$6      #1 or 2 (1=observed allele frequency with HWE-assumed, or 2=uniform prior).
+
+####min and max depth can be set automatically with the hashed sections below or manually.
 mindepth=250   #####$(sed -e '1,/Global_depth/d' $bamdir/$reffile/*info| awk '$2>0.05 {print $1}'| head -n1) #15 etc.  5 percentile taken from $bamdir/$reffile/*info
 maxdepth=450   ######$(sed -e '1,/Global_depth/d' $bamdir/$reffile/*info| awk '$2<0.80 {print $1}'| tail -n1) #75 etc. 80 percentile taken from $bamdir/$reffile/*info
+
 minind=$(cat $sampleinfo | wc -l | awk '{print int($1/2+0.5)}')   #43 etc. 50% of #samples, rounded up integral
 maxdepind=10  #Used to filter exome-wide SNP-sites with high sample-depths to exclude repeat-regions in the genome; -1 means no filtering.
 hwepval=-1 #Used to monitor SNP-sites extremely departed from HWE; -1 means no filtering on posterior genotype likelihoods.
@@ -30,13 +33,11 @@ pdir=$(pwd)
 
 
 ####add at the end of angsd command as -rf $regions
-regions=/export/home/a-e/amateos/phyluce_test_2/mapping_tests/reference/region_files_cdhit/top100_uces_rf.txt    #A list of regions ('chr:') for -rf in ANGSD. Manually made based on 30 samples with ca. 1X coverage to exclude reads from highly repeated regions but accommodate
+regions=/your/path/a_rf.txt    #A list of regions ('chr:') for -rf in ANGSD. Manually made based on 30 samples with ca. 1X coverage to exclude reads from highly repeated regions but accommodate
     # stochasticity. Contigs that have the mean of average coverage <10X are included, but ones that have no mapped reads or all samples had >4X coverage were excluded.
     # Also regions that any of populaitons had no mapped reads were also excluded (common only). 
 	# See ../../1_transcriptome_assembly/results/Final_reference_transcriptomes/README.txt for details.
-	
-    # Oalg_verC3_non-repeat_cov10_common_contigs.rf.txt
-    
+
 
 #log slurm info
 echo "# Job ID: $SLURM_JOB_ID started"
@@ -46,7 +47,7 @@ date
 echo
 
 #Ensure /scratch is not full.
-dir="/export/home/a-e/amateos/phyluce_test_2/mapping_tests/scratch"   
+dir="/your/path/scratch"   
 reqSpace=50     #in GByte
 availSpace=$(df -BG "${dir}" | awk 'NR==2 { print $4+0 }')
 if (( availSpace < reqSpace )); then
@@ -56,10 +57,10 @@ fi
 
 #Copy files
 
-mkdir -p /export/home/a-e/amateos/phyluce_test_2/mapping_tests/scratch/tmp.$SLURM_JOB_ID
-cd /export/home/a-e/amateos/phyluce_test_2/mapping_tests/scratch/tmp.$SLURM_JOB_ID
+mkdir -p /your/path/scratch/tmp.$SLURM_JOB_ID
+cd /your/path//scratch/tmp.$SLURM_JOB_ID
 echo "####reference files copying#####"
-cp /export/home/a-e/amateos/phyluce_test_2/mapping_tests/reference/ahya_20k.fasta $reffile.fasta
+cp /your/path/reference/ahya_20k.fasta $reffile.fasta
 echo
 echo "Reference: $reffile copied"
 echo
@@ -91,12 +92,12 @@ echo "mindepth=$mindepth ; maxdepth=$maxdepth ; minind=$minind will be used in A
 echo "ANGSD starting..."
 date
 samtools faidx $reffile.fasta
-/export/home/a-e/amateos/phyluce_test_2/tools/ngsTools/angsd/angsd -P $SLURM_CPUS_PER_TASK -b bam_list.txt -ref $reffile.fasta -out ${n_ind}Samples_to_${reffile}_MinQ20_SNPpval${snp_pval}_Prior${prior}\
+/your/path/tools/ngsTools/angsd/angsd -P $SLURM_CPUS_PER_TASK -b bam_list.txt -ref $reffile.fasta -out ${n_ind}Samples_to_${reffile}_MinQ20_SNPpval${snp_pval}_Prior${prior}\
             -uniqueOnly 0 -remove_bads 0 -only_proper_pairs 0 -doQsDist 1 -doDepth 1 -maxDepth $upperdepth  -dumpCounts 1\
             -minQ 2 -minInd $minind -setMinDepth $mindepth -setMaxDepth $maxdepth -setMaxDepthInd $maxdepind -doCounts 1\
             -GL 2 -doMajorMinor 1 -doMaf 1 -minMaf 0.01 -SNP_pval $snp_pval\
             -doGeno 8 -doPost $prior -doHWE 1 -minHWEpval $hwepval -rf $regions
-Rscript /export/home/a-e/amateos/phyluce_test_2/tools/ngsTools/Scripts/plotQC.R\
+Rscript /your/path/tools/ngsTools/Scripts/plotQC.R\
  ${n_ind}Samples_to_${reffile}_MinQ20_SNPpval${snp_pval}_Prior${prior} 2> /dev/null
 echo "ANGSD complete"
 NSITES=$(zcat ${n_ind}Samples_to_${reffile}_MinQ20_SNPpval${snp_pval}_Prior${prior}.mafs.gz | tail -n+2 | wc -l)
@@ -111,7 +112,7 @@ export LD_LIBRARY_PATH=$(conda info --base)/envs/gsl_env/lib:$LD_LIBRARY_PATH
 
 echo "ngsDist starting..."  #phylogenetic tree is optional
 echo "single"
-/export/home/a-e/amateos/phyluce_test_2/tools/ngsTools/ngsDist/ngsDist -verbose 1 -geno ${n_ind}Samples_to_${reffile}_MinQ20_SNPpval${snp_pval}_Prior${prior}.geno.gz\
+/your/path/tools/ngsTools/ngsDist/ngsDist -verbose 1 -geno ${n_ind}Samples_to_${reffile}_MinQ20_SNPpval${snp_pval}_Prior${prior}.geno.gz\
  -probs -n_ind $n_ind -n_sites $NSITES\
  -labels sample.list  -o ${n_ind}Samples_to_${reffile}_MinQ20_SNPpval${snp_pval}_Prior${prior}.dist -n_threads $SLURM_CPUS_PER_TASK
 echo "#####Skipping phylogenetic tree######"
@@ -120,30 +121,12 @@ echo "##### deactivating conda env with gsl2.8####"
 conda deactivate
 echo
 
-#########fastme -T $SLURM_CPUS_PER_TASK     -i ${n_ind}Samples_to_${reffile}_MinQ20_SNPpval${snp_pval}_Prior${prior}.dist\
-#########       -m B -n B      -o ${n_ind}Samples_to_${reffile}_MinQ20_SNPpval${snp_pval}_Prior${prior}.tree
-echo
 
-echo "bootstrap"
-date
-###/export/home/a-e/amateos/phyluce_test_2/tools/ngsTools/ngsDist/ngsDist -verbose 1 -geno ${n_ind}Samples_to_${reffile}_MinQ20_SNPpval${snp_pval}_Prior${prior}.geno.gz\
-## -probs -n_ind $n_ind -n_sites $NSITES -n_boot_rep 100 -boot_block_size 200 -seed 1\
-## -labels sample.list  -o ${n_ind}Samples_to_${reffile}_MinQ20_SNPpval${snp_pval}_Prior${prior}_boot.dist -n_threads $NSLOTS
-#########fastme -T $NSLOTS     -i ${n_ind}Samples_to_${reffile}_MinQ20_SNPpval${snp_pval}_Prior${prior}_boot.dist\
-######### -D 101 -m B -n B    -o ${n_ind}Samples_to_${reffile}_MinQ20_SNPpval${snp_pval}_Prior${prior}_boot.trees
-#########head -n 1                ${n_ind}Samples_to_${reffile}_MinQ20_SNPpval${snp_pval}_Prior${prior}_boot.trees > main.nwk
-#########tail -n+2                ${n_ind}Samples_to_${reffile}_MinQ20_SNPpval${snp_pval}_Prior${prior}_boot.trees > boot.nwk
-#########raxmlHPC -m GTRCAT    -n ${n_ind}Samples_to_${reffile}_MinQ20_SNPpval${snp_pval}_Prior${prior}_bootstrap.tree -t main.nwk -z boot.nwk -f b
-echo "done"
-date
-echo
 
 echo "moving result to:"
 echo " $outdir/$reffile"
-#######rm *_MinQ20_PairedAndSingle_dedup_sorted_realigned.bam *_MinQ20_PairedAndSingle_dedup_sorted_realigned.bai bam_list.txt sample.list ${n_ind}Samples_to_${reffile}*gz
-###############rm *fasta* main.nwk boot.nwk RAxML_bipartitionsBranchLabels* RAxML_info* *stat.txt
-mv RAxML_bipartitions.${n_ind}Samples_to_${reffile}_MinQ20_SNPpval${snp_pval}_Prior${prior}_bootstrap.tree\
-                      ${n_ind}Samples_to_${reffile}_MinQ20_SNPpval${snp_pval}_Prior${prior}_bootstrap.tree
+
+
 mkdir -p $outdir/$reffile
 mv * $outdir/$reffile
 echo
