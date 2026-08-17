@@ -1,4 +1,4 @@
-setwd("C:/Users/amateos/OneDrive - Australian Institute of Marine Science/AIMS_Semesters 3 and 4/Semesters 3 and 4/backups_from_HPC/resultsMDS/for_paper_figs")
+setwd("/your/path/")
 
 library(ggplot2)
 library(scales)
@@ -41,12 +41,8 @@ create_mds_plot <- function(annot_file, input_header, flip_x = FALSE, flip_y = F
   
   # --- 3. Outlier Removal ---
   omit_ids <- c(
-    "RRAP-ECT01-2022-Aspat-CBHE-1742_L1",
-    "RRAP-ECT01-2022-Aspat-CBHE-1763_L1",
-    "RRAP-ECT01-2022-Aspat-CBHE-1762_L1",
-    "RRAP-ECT01-2022-Aspat-CBHE-1759_L2",
-    "RRAP-ECT01-2022-Aspat-CBHE-1766_L1"
-
+    "x",
+    "y"
     
   )
   
