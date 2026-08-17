@@ -44,10 +44,10 @@ if (( availSpace < reqSpace )); then
 fi
 
 #Copy files
-echo "########## file copy to /export/home/a-e/amateos/phyluce_test_2/mapping_tests/scratch"
-mkdir -p /export/home/a-e/amateos/phyluce_test_2/mapping_tests/scratch/tmp.$SLURM_JOB_ID
-cd /export/home/a-e/amateos/phyluce_test_2/mapping_tests/scratch/tmp.$SLURM_JOB_ID
-cp /export/home/a-e/amateos/phyluce_test_2/data/Ahya_samples/${sample}*.fq.gz .
+echo "########## file copy to /your/path/scratch"
+mkdir -p /your/path/scratch/tmp.$SLURM_JOB_ID
+cd /your/path/scratch/tmp.$SLURM_JOB_ID
+cp /your/path/data/Ahya_samples/${sample}*.fq.gz .
 unpigz ${sample}*.fq.gz
 echo "# PE files copied, unzipped"
 ls * -l
@@ -66,14 +66,14 @@ echo "Job ID: '$SLURM_JOB_ID'"
 
 echo "########## Adapter-clipping by trimmomatic..."
 #Adapter-clipping
-/export/home/a-e/amateos/miniconda3/envs/phyluce-1.7.3/bin/trimmomatic PE -threads $SLURM_CPUS_PER_TASK \
- /export/home/a-e/amateos/phyluce_test_2/mapping_tests/scratch/tmp.${SLURM_JOB_ID}/${sample}_FastUniq_1.fastq \
- /export/home/a-e/amateos/phyluce_test_2/mapping_tests/scratch/tmp.${SLURM_JOB_ID}/${sample}_FastUniq_2.fastq \
- /export/home/a-e/amateos/phyluce_test_2/mapping_tests/scratch/tmp.${SLURM_JOB_ID}/${sample}_AdapterClipped_forward_paired.fastq \
- /export/home/a-e/amateos/phyluce_test_2/mapping_tests/scratch/tmp.${SLURM_JOB_ID}/${sample}_AdapterClipped_forward_unpaired.fastq \
- /export/home/a-e/amateos/phyluce_test_2/mapping_tests/scratch/tmp.${SLURM_JOB_ID}/${sample}_AdapterClipped_reverse_paired.fastq \
- /export/home/a-e/amateos/phyluce_test_2/mapping_tests/scratch/tmp.${SLURM_JOB_ID}/${sample}_AdapterClipped_reverse_unpaired.fastq \
- ILLUMINACLIP:/export/home/a-e/amateos/tools/bbmap/resources/adapters.fa:2:30:10:4:true/adapters.fa:2:30:10:4:true \
+/your/path/miniconda3/envs/phyluce-1.7.3/bin/trimmomatic PE -threads $SLURM_CPUS_PER_TASK \
+ /your/path/scratch/tmp.${SLURM_JOB_ID}/${sample}_FastUniq_1.fastq \
+ /your/path/scratch/tmp.${SLURM_JOB_ID}/${sample}_FastUniq_2.fastq \
+/your/path/scratch/tmp.${SLURM_JOB_ID}/${sample}_AdapterClipped_forward_paired.fastq \
+/your/path/scratch/tmp.${SLURM_JOB_ID}/${sample}_AdapterClipped_forward_unpaired.fastq \
+/your/path/scratch/tmp.${SLURM_JOB_ID}/${sample}_AdapterClipped_reverse_paired.fastq \
+ /your/path/scratch/tmp.${SLURM_JOB_ID}/${sample}_AdapterClipped_reverse_unpaired.fastq \
+ ILLUMINACLIP:/your/path/bbmap/resources/adapters.fa:2:30:10:4:true/adapters.fa:2:30:10:4:true \
  -phred33
  # This specifies; seed mitmatch=2; palindrome clip threshold=30; simple clip threshold=10; min adapter length=4.
 
@@ -85,9 +85,8 @@ echo
 #BBsplit into Oalg symbionts, mitochondria, and the rest containing host nucDNA reads, Omitted mito.
 echo "########## BBsplit to Symb, Mito, and other(clean)"
 echo "# ref file copying"
-cp /export/home/a-e/amateos/phyluce_test_2/mapping_tests/data/zoox_genomes/Zoox_combined.fasta ./symbiont_genomes.fasta ##zoox genome
-###########cp /export/home/a-e/amateos/phyluce_test_2/mapping_tests/data/Oalg_mito_refs.fasta ./mitochondria.fasta
-gunzip -c /export/home/a-e/amateos/tools/bbmap/resources/phix174_ill.ref.fa.gz > phix.fasta
+cp /your/path/data/zoox_genomes/Zoox_combined.fasta ./symbiont_genomes.fasta ##zoox genome
+gunzip -c /your/path/bbmap/resources/phix174_ill.ref.fa.gz > phix.fasta
 
 echo "bbsplit processing..."
 bbsplit.sh in1=${sample}_AdapterClipped_forward_paired.fastq in2=${sample}_AdapterClipped_reverse_paired.fastq\
@@ -103,9 +102,9 @@ echo
 
 echo "########## QC-trimming by trimmomatic..."
 #QC-trimming
-/export/home/a-e/amateos/miniconda3/envs/phyluce-1.7.3/bin/trimmomatic PE -threads $SLURM_CPUS_PER_TASK -phred33 \
- /export/home/a-e/amateos/phyluce_test_2/mapping_tests/scratch/tmp.${SLURM_JOB_ID}/paired_clean1.fastq \
- /export/home/a-e/amateos/phyluce_test_2/mapping_tests/scratch/tmp.${SLURM_JOB_ID}/paired_clean2.fastq \
+/your/path/miniconda3/envs/phyluce-1.7.3/bin/trimmomatic PE -threads $SLURM_CPUS_PER_TASK -phred33 \
+ /your/path/scratch/tmp.${SLURM_JOB_ID}/paired_clean1.fastq \
+/your/path/scratch/tmp.${SLURM_JOB_ID}/paired_clean2.fastq \
  ${sample}_AdapterClipped_QualFiltered_forward_paired.fastq \
  ${sample}_AdapterClipped_QualFiltered_forward_unpaired.fastq \
  ${sample}_AdapterClipped_QualFiltered_reverse_paired.fastq \
