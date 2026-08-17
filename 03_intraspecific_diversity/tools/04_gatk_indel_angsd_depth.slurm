@@ -32,7 +32,7 @@ date
 echo
 
 #Ensure /scratch is not full.
-dir="/export/home/a-e/amateos/phyluce_test_2/mapping_tests/scratch"   
+dir="/your/path/scratch"   
 reqSpace=50     #in GByte
 availSpace=$(df -BG "${dir}" | awk 'NR==2 { print $4+0 }')
 if (( availSpace < reqSpace )); then
@@ -42,8 +42,8 @@ fi
 
 #Copy files
 
-mkdir -p /export/home/a-e/amateos/phyluce_test_2/mapping_tests/scratch/tmp.$SLURM_JOB_ID
-cd /export/home/a-e/amateos/phyluce_test_2/mapping_tests/scratch/tmp.$SLURM_JOB_ID
+mkdir -p /your/path/scratch/tmp.$SLURM_JOB_ID
+cd /your/path/scratch/tmp.$SLURM_JOB_ID
 
 
 
@@ -51,7 +51,7 @@ cd /export/home/a-e/amateos/phyluce_test_2/mapping_tests/scratch/tmp.$SLURM_JOB_
 ##### REFERENCE FILE HERE #####
 
 echo "####reference files copying#####"
-cp /export/home/a-e/amateos/phyluce_test_2/mapping_tests/reference/ahya_WG.fasta $reffile.fasta
+cp /your/path/reference/ahya_WG.fasta $reffile.fasta
 
 
 
@@ -101,7 +101,7 @@ echo
 
 echo "##### indexing reference file and make dictionary file"
 samtools faidx $reffile.fasta
-/export/home/a-e/amateos/miniconda3/bin/picard CreateSequenceDictionary \
+/your/path/miniconda3/bin/picard CreateSequenceDictionary \
  R=${reffile}.fasta O=${reffile}.dict
 echo "done"
 echo
@@ -112,14 +112,14 @@ ORIGINAL_JAVA_HOME=$JAVA_HOME
 ORIGINAL_PATH=$PATH
 
 # Set Java 1.8 (for GATK)
-export JAVA_HOME=/export/home/a-e/amateos/tools/java/jdk8u392-b08
+export JAVA_HOME=/your/path/tools/java/jdk8u392-b08
 export PATH=$JAVA_HOME/bin:$PATH
 # Confirm Java version (should be Java 1.8)
 java -version
 echo
 echo
 echo "##### gatk identifiying target intervals"
-java -Xmx250G -jar /export/home/a-e/amateos/tools/GenomeAnalysisTK-3.8-1-0-gf15c1c3ef/GenomeAnalysisTK3.jar \
+java -Xmx250G -jar/your/path/tools/GenomeAnalysisTK-3.8-1-0-gf15c1c3ef/GenomeAnalysisTK3.jar \
   -T RealignerTargetCreator \
   -R $reffile.fasta \
   -I Samples_To_${reffile}_dedup_sorted_bam.list \
@@ -130,7 +130,7 @@ echo "done"
 echo
 
 echo "##### gatk re-aligning around indels"
-java -Xmx200G -jar /export/home/a-e/amateos/tools/GenomeAnalysisTK-3.8-1-0-gf15c1c3ef/GenomeAnalysisTK3.jar \
+java -Xmx200G -jar /your/path/tools/GenomeAnalysisTK-3.8-1-0-gf15c1c3ef/GenomeAnalysisTK3.jar \
    -T IndelRealigner \
    -R $reffile.fasta \
    -I Samples_To_${reffile}_dedup_sorted_bam.list \
@@ -141,7 +141,7 @@ echo "done"
 echo
 # Restore original Java (Miniconda Java)
 export JAVA_HOME=$ORIGINAL_JAVA_HOME
-export PATH=/export/home/a-e/amateos/miniconda3/bin:$ORIGINAL_PATH
+export PATH=/your/path/miniconda3/bin:$ORIGINAL_PATH
 echo "#######restoring java to version before GATK######"
 # Confirm restoration (should return Miniconda Java path)
 java -version
@@ -164,9 +164,9 @@ echo
 echo "ANGSD starting to check the mapping depth profile..."
 date
 samtools faidx $reffile.fasta
-/export/home/a-e/amateos/phyluce_test_2/tools/ngsTools/angsd/angsd -P $SLURM_CPUS_PER_TASK -b bam_list.txt -out ${n_ind}Samples_to_${reffile}_MinQ20_qc -ref $reffile.fasta\
+/your/path/tools/ngsTools/angsd/angsd -P $SLURM_CPUS_PER_TASK -b bam_list.txt -out ${n_ind}Samples_to_${reffile}_MinQ20_qc -ref $reffile.fasta\
  -minQ 2 -trim 0 -remove_bads 0 -uniqueOnly 0 -only_proper_pairs 0 -doQsDist 1 -doDepth 1 -doCounts 1 -maxDepth $maxdepth
-Rscript /export/home/a-e/amateos/phyluce_test_2/tools/ngsTools/Scripts/plotQC.R ${n_ind}Samples_to_${reffile}_MinQ20_qc 2> /dev/null
+Rscript /your/path/tools/ngsTools/Scripts/plotQC.R ${n_ind}Samples_to_${reffile}_MinQ20_qc 2> /dev/null
  # Use -only_proper_pairs 0 to also retain reads for which only one end of a pair is mapped (because mapping to a transcriptome, not the whole genome)
  # Remove_bads 0 and -uniqueOnly 0 as they were already filtered from the bam files for poorly mapped reads.
 
