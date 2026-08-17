@@ -31,4 +31,4 @@ You will need to install the following tools to run the pipeline (I recomend usi
 
 You will also need some standard tools like gzip to work with all the files. It's important to use the versions specified in this list, as some features used in this pipeline might not be available in newer builds.
 
-Step 03_intraspecific_diversity is bases on X
+Step 03_intraspecific_diversity is based on https://github.com/yuisato/Oalg_exome_snps/tree/master/2_exome_snp_analyses.
