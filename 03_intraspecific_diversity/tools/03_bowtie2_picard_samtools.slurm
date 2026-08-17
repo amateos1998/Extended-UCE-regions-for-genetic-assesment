@@ -39,7 +39,7 @@ date
 echo
 
 #Ensure /scratch is not full.
-dir="/export/home/a-e/amateos/phyluce_test_2/mapping_tests/scratch"   
+dir="/your/path/scratch"   
 reqSpace=10     #in GByte
 availSpace=$(df -BG "${dir}" | awk 'NR==2 { print $4+0 }')
 if (( availSpace < reqSpace )); then
@@ -48,10 +48,10 @@ if (( availSpace < reqSpace )); then
 fi
 
 #Copy files
-echo "########## file copy to /export/home/a-e/amateos/phyluce_test_2/mapping_tests/scratch"
-mkdir -p /export/home/a-e/amateos/phyluce_test_2/mapping_tests/scratch/tmp.$SLURM_JOB_ID
-cd /export/home/a-e/amateos/phyluce_test_2/mapping_tests/scratch/tmp.$SLURM_JOB_ID
-cp /export/home/a-e/amateos/phyluce_test_2/mapping_tests/results/02-05_clean_reads/${sample}*.fastq.gz .
+echo "########## file copy to/your/path/mapping_tests/scratch"
+mkdir -p /your/path/scratch/tmp.$SLURM_JOB_ID
+cd /your/path/scratch/tmp.$SLURM_JOB_ID
+cp /your/path/results/02-05_clean_reads/${sample}*.fastq.gz .
 unpigz ${sample}*.fastq.gz
 echo "# PE files and SE (merged) copied, unzipped"
 ls -l *
@@ -177,7 +177,7 @@ echo "#####file fixed"
 
  #Deduplication with picard
  echo "########## picard started"
- /export/home/a-e/amateos/miniconda3/bin/picard MarkDuplicates I=${sample}_to_${reffile}_MinQ20_PairedAndSingle.bam\
+/your/path/miniconda3/bin/picard MarkDuplicates I=${sample}_to_${reffile}_MinQ20_PairedAndSingle.bam\
  O=${sample}_to_${reffile}_MinQ20_PairedAndSingle_dedup.bam M=${sample}_to_${reffile}_MinQ20_PairedAndSingle_dupstat.txt\
  VALIDATION_STRINGENCY=SILENT REMOVE_DUPLICATES=true
  echo "picard complete on $reffile"
@@ -201,6 +201,6 @@ echo "#####file fixed"
  echo
 done
 
-rm -r /export/home/a-e/amateos/phyluce_test_2/mapping_tests/scratch/tmp.$SLURM_JOB_ID/*    #delete all remaining files in tmp folder.
+rm -r /your/path/scratch/tmp.$SLURM_JOB_ID/*    #delete all remaining files in tmp folder.
 echo "# job ID: $SLURM_JOB_ID finished."
 
