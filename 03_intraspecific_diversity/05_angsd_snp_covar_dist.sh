@@ -12,11 +12,11 @@
 submit3(){
 sbatch --partition=cpuq \
 --job-name=snpAH20k \
---output=/export/home/a-e/amateos/phyluce_test_2/mapping_tests/logs/top100_uces_angsd_ngsdist_logs/angsd_$1.log \
-  /export/home/a-e/amateos/phyluce_test_2/mapping_tests/angsd_ngs_dist.slurm $1 \
-  /export/home/a-e/amateos/phyluce_test_2/mapping_tests/data/meta_file_$2.list \
-  /export/home/a-e/amateos/phyluce_test_2/mapping_tests/results/10b-11_gatk_indel_angsd_depth/$2 \
-  /export/home/a-e/amateos/phyluce_test_2/mapping_tests/results/top100_uces_12_ngs_dist_region/$2 $3 $4
+--output=/your/path/angsd_$1.log \
+  /your/path/angsd_ngs_dist.slurm $1 \
+  /your/path/data/meta_file_$2.list \
+  /your/path/results/10b-11_gatk_indel_angsd_depth/$2 \
+  /your/path//results/top100_uces_12_ngs_dist_region/$2 $3 $4
 }
 
 #Full dataset run for 5-80%, maxDepthInd4, GL2, no-minHWEpval and uisng a region-filter file. ANGSD v0.929.
