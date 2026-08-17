@@ -8,7 +8,7 @@
 #SBATCH --partition=cpuq
 
 
-#sfs_folded-only_thetas_minInd50.qsub located in /opt/extern/bremen/symbiosis/sato/05_exome_SNPs_Oalg_180115/bin
+
 #This script makes ANGSD-saf files (.gz & .idx) and calculates folded SFS and thetas/D-stats using realSFS (unfolded SFS survey is skipped).
 #SAF file is folded for thetaStat and generatd with ANGSD -doSaf 1 -fold 1. (not using -doSaf 2 inbreed version as coefficient was all 0).
 #ANGSD v0.929 was used instead of v0.921 because of a fatal error fixed for thetas. thetaStat and realSFS are also from ANGSD 0.929.
@@ -28,7 +28,7 @@ maxdepth=$(cat $sampleinfo | wc -l | awk '{print $1*20}') #200 etc. 10X of sampl
 
 ### REGION FILE HERE ####
 
-regions=/export/home/a-e/amateos/phyluce_test_2/mapping_tests/reference/region_files_cdhit/top100_uces_rf.txt
+regions=/your/path/a_rf.txt
 
 #log slurm info
 echo "# Job ID: $SLURM_JOB_ID started"
@@ -38,7 +38,7 @@ date
 echo
 
 #Ensure /scratch is not full.
-dir="/export/home/a-e/amateos/phyluce_test_2/mapping_tests/scratch"   
+dir="/your/path/scratch"   
 reqSpace=50     #in GByte
 availSpace=$(df -BG "${dir}" | awk 'NR==2 { print $4+0 }')
 if (( availSpace < reqSpace )); then
@@ -46,11 +46,11 @@ if (( availSpace < reqSpace )); then
   exit 1
 fi
 
-mkdir -p /export/home/a-e/amateos/phyluce_test_2/mapping_tests/scratch/tmp.$SLURM_JOB_ID
-cd /export/home/a-e/amateos/phyluce_test_2/mapping_tests/scratch/tmp.$SLURM_JOB_ID
+mkdir -p /your/path/scratch/tmp.$SLURM_JOB_ID
+cd /your/path/scratch/tmp.$SLURM_JOB_ID
 
 echo "copying reference file $reffile"
-cp /export/home/a-e/amateos/phyluce_test_2/mapping_tests/reference/ahya_20k.fasta $reffile.fasta
+cp /your/path/reference/ahya_20k.fasta $reffile.fasta
 
 
 echo "copying realingned bam and index files, unzipping them, and making a list of samples included"
@@ -76,7 +76,7 @@ echo
 echo "folded SFS calculation for thetas stats..."
 echo "Calculating SAF (sample allele frequency) for $pop for folded SFS"
 samtools faidx $reffile.fasta
-/export/home/a-e/amateos/phyluce_test_2/tools/angsd928/angsd -P $SLURM_CPUS_PER_TASK -b bam_list.txt -ref $reffile.fasta -anc $reffile.fasta -rf $regions \
+/your/path/tools/angsd928/angsd -P $SLURM_CPUS_PER_TASK -b bam_list.txt -ref $reffile.fasta -anc $reffile.fasta -rf $regions \
  -out ${pop}_${n_ind}samples_to_${reffile}_folded -minInd $minind\
  -GL 2 -doCounts 1 -remove_bads 0 -uniqueOnly 0 -only_proper_pairs 0\
  -minQ 2 -setMaxDepth $maxdepth -doSaf 1 -fold 1 -underFlowProtect 1
@@ -90,7 +90,7 @@ ls -l ${pop}_${n_ind}samples_to_${reffile}_folded.*
 echo
 
 echo "SFS estimation"
-/export/home/a-e/amateos/phyluce_test_2/tools/angsd928/misc/realSFS ${pop}_${n_ind}samples_to_${reffile}_folded.saf.idx -P $SLURM_CPUS_PER_TASK 2> /dev/null > ${pop}_${n_ind}samples_to_${reffile}_folded.sfs
+/your/path/tools/angsd928/misc/realSFS ${pop}_${n_ind}samples_to_${reffile}_folded.saf.idx -P $SLURM_CPUS_PER_TASK 2> /dev/null > ${pop}_${n_ind}samples_to_${reffile}_folded.sfs
 echo "done"
 ls -l ${pop}_${n_ind}samples_to_${reffile}_folded.sfs
 cat ${pop}_${n_ind}samples_to_${reffile}_folded.sfs
@@ -101,7 +101,7 @@ echo
 #using newer angs v.
 echo "Calculating thetas for $pop using folded SFS"
 samtools faidx $reffile.fasta
-/export/home/a-e/amateos/phyluce_test_2/tools/angsd928/angsd -P $SLURM_CPUS_PER_TASK -b bam_list.txt -ref $reffile.fasta -anc $reffile.fasta -rf $regions \
+/your/path/tools/angsd928/angsd -P $SLURM_CPUS_PER_TASK -b bam_list.txt -ref $reffile.fasta -anc $reffile.fasta -rf $regions \
  -out ${pop}_${n_ind}samples_to_${reffile}_folded_nucdiv -minInd $minind\
  -GL 2 -doCounts 1 -remove_bads 0 -uniqueOnly 0 -only_proper_pairs 0\
  -minQ 2 -setMaxDepth $maxdepth -doSaf 1 -fold 1 -underFlowProtect 1\
@@ -123,7 +123,7 @@ echo
 echo "Nucleotide diversity estimation and neutuarity tests"
 
 
-/export/home/a-e/amateos/phyluce_test_2/tools/angsd928/misc/thetaStat do_stat ${pop}_${n_ind}samples_to_${reffile}_folded_nucdiv.thetas.idx \
+/your/path/tools/angsd928/misc/thetaStat do_stat ${pop}_${n_ind}samples_to_${reffile}_folded_nucdiv.thetas.idx \
  -outnames ${pop}_${n_ind}samples_to_${reffile}_folded_nucdiv.thetas #results are per chromosome.
 
 
