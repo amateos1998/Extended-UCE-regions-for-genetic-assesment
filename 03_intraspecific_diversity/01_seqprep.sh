@@ -8,7 +8,7 @@
 for sample in $(cut -f1 /your/path/sample.list); do
   sbatch --partition=cpuq \
   --job-name=seqprep_${sample} \
-  --output=/export/home/a-e/amateos/phyluce_test_2/mapping_tests/logs/seqprep/ahyaGRseqprep_${sample}.out \
+  --output=/your/path/_${sample}.out \
   /your/path/bbsplit_clean_norm.slurm $sample your/path/01_results
 done
 
