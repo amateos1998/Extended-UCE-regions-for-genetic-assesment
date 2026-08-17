@@ -5,7 +5,7 @@ library(patchwork)
 library(ggrepel)
 
 prefix <- "aten_main_top200"
-setwd("C:/Users/amateos/OneDrive - Australian Institute of Marine Science/AIMS_Semesters 3 and 4/Semesters 3 and 4/backups_from_HPC/results_Mantel")
+setwd("/your/path/")
 # 1. INITIAL MANTEL TEST (no filtering, to id outliers)
 {
   file_names <- paste0(prefix, c("_500", "_5k","_20k", "_WG"))
