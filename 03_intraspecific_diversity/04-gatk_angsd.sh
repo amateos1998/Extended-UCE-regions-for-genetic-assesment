@@ -16,11 +16,11 @@
 submit(){
 sbatch --partition=cpuq \
 --job-name=gatkAHwg \
---output=/export/home/a-e/amateos/phyluce_test_2/mapping_tests/logs/ahya_GR_gatk/gatkAngsd_$3.log \
-/export/home/a-e/amateos/phyluce_test_2/mapping_tests/gatk_indel_angsd_depth.slurm $1 \
-    /export/home/a-e/amateos/phyluce_test_2/mapping_tests/data/meta_file_$2.list \
-    /export/home/a-e/amateos/phyluce_test_2/mapping_tests/results/07_map_reads/$3 \
-    /export/home/a-e/amateos/phyluce_test_2/mapping_tests/results/10b-11_gatk_indel_angsd_depth/$2 $4
+--output=/your/path/gatkAngsd_$3.log \
+/your/path/gatk_indel_angsd_depth.slurm $1 \
+    /your/path/data/meta_file_$2.list \
+    /your/path/results/07_map_reads/$3 \
+   /your/path/results/10b-11_gatk_indel_angsd_depth/$2 $4
 }
 
 #'submit' parameters
