@@ -1,1 +1,1 @@
-Includes R scripts to run MDS, Mantel tests
+Includes R scripts to run MDS and Mantel tests. Both scripts contain figure generating chunks whic are optional and can be modified according to needs.
